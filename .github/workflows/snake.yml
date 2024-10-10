@@ -1,0 +1,28 @@
+name: Snake Move
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  snake:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install requests
+      run: pip install requests
+
+    - name: Run Snake
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+      run: |
+        python snake.py $(git log --pretty=format:"%h" -n 5)  # Passa os últimos 5 commits
